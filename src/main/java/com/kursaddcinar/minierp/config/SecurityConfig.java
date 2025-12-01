@@ -25,7 +25,13 @@ public class SecurityConfig {
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
             // Şimdilik tüm isteklere izin ver (Permit All)
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api/**").permitAll() // API endpointlerini aç
+                //.requestMatchers("/api/**")
+                .requestMatchers(
+                        "/v3/api-docs/**",
+                        "/swagger-ui/**",
+                        "/swagger-ui.html"
+                    )
+                .permitAll() // API endpointlerini aç
                 .anyRequest().permitAll() // Diğer her şeyi de aç (Swagger vs. için)
             );
 
