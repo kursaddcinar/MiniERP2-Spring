@@ -6,6 +6,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -20,6 +22,9 @@ public interface CariAccountRepository extends JpaRepository<CariAccount, Intege
 
     @EntityGraph(attributePaths = {"type", "cariTransactions"})
     Optional<CariAccount> findByCariId(Integer cariId);
+    
+    @EntityGraph(attributePaths = {"type"})
+    Page<CariAccount> findByIsActiveTrueAndCariCodeContainingIgnoreCaseOrCariNameContainingIgnoreCase(String cariCode, String cariName, Pageable pageable);
 
     @Query("SELECT c FROM CariAccount c WHERE c.isActive = true AND (c.type.typeCode = 'MUSTERI' OR c.type.typeCode = 'HERSIKI')")
     List<CariAccount> findCustomers();
