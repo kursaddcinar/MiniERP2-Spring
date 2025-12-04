@@ -18,11 +18,11 @@ import java.util.function.Function;
 @Component
 public class JwtUtil {
 
-    // application.properties'den okuyacağız, şimdilik default veriyoruz
-    @Value("${jwt.secret:bu_cok_gizli_ve_uzun_bir_secret_key_olmali_en_az_256_bit_32_karakter}")
+    // application.properties'den okuyacağız,
+	@Value("${jwt.secret}")
     private String secretKey;
-
-    @Value("${jwt.expiration:86400000}") // 1 gün (ms cinsinden)
+	
+	@Value("${jwt.expiration}")
     private long jwtExpiration;
 
     private Key getSignInKey() {
@@ -73,6 +73,13 @@ public class JwtUtil {
 
     public Boolean validateToken(String token, UserDetails userDetails) {
         final String username = extractUsername(token);
+        return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
+    }
+    
+    // FİLTREDE KULLANILAN METOD: Token geçerli mi?
+    public boolean isTokenValid(String token, UserDetails userDetails) {
+        final String username = extractUsername(token);
+        // Token'daki username ile UserDetails'deki (veritabanı) username tutuyor mu VE süre dolmamış mı?
         return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
     }
 }
