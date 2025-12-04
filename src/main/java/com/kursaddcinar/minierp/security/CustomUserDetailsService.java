@@ -25,7 +25,8 @@ public class CustomUserDetailsService implements UserDetailsService {
                 .orElseThrow(() -> new UsernameNotFoundException("Kullanıcı bulunamadı: " + username));
 
         List<SimpleGrantedAuthority> authorities = user.getUserRoles().stream()
-                .map(ur -> new SimpleGrantedAuthority("ROLE_" + ur.getRole().getRoleName().toUpperCase())) // ROLE_ADMIN formatı
+                //.map(ur -> new SimpleGrantedAuthority("ROLE_" + ur.getRole().getRoleName().toUpperCase())) // ROLE_ADMIN formatı
+        		.map(userRole -> new SimpleGrantedAuthority(userRole.getRole().getRoleName()))
                 .collect(Collectors.toList());
 
         return new org.springframework.security.core.userdetails.User(

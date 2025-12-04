@@ -4,6 +4,8 @@ import com.kursaddcinar.minierp.dto.DtoUser;
 import com.kursaddcinar.minierp.service.IUserService;
 import com.kursaddcinar.minierp.common.ApiResponse; // Senin ApiResponse yapın
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,6 +19,7 @@ public class UserController {
 
     // Belirli bir role sahip kullanıcıları getirir
     // Örnek istek: GET /api/users/role/ADMIN
+    @PreAuthorize("hasRole('ADMIN')") 
     @GetMapping("/role/{roleName}")
     public ApiResponse<List<DtoUser>> getUsersByRole(@PathVariable String roleName) {
         return userService.getUsersByRole(roleName);

@@ -1,10 +1,17 @@
 package com.kursaddcinar.minierp.exception;
 
-import com.kursaddcinar.minierp.common.ApiResponse;
+
+import java.nio.file.AccessDeniedException;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+import com.kursaddcinar.minierp.common.ApiResponse;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -14,6 +21,20 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<ApiResponse<Object>> handleResourceNotFound(ResourceNotFoundException ex) {
         return ResponseEntity.ok(ApiResponse.error(ex.getMessage()));
+    }
+    
+    // Giriş Hatası (Şifre yanlışsa)
+    @ExceptionHandler(BadCredentialsException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public ApiResponse<Object> handleBadCredentials(BadCredentialsException e) {
+        return ApiResponse.error("Kullanıcı adı veya şifre hatalı.", 401);
+    }
+    
+    // Yetki Hatası (Admin yerine User girmeye çalışırsa)
+    @ExceptionHandler({AccessDeniedException.class, AuthorizationDeniedException.class})
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    public ApiResponse<Object> handleAccessDenied(Exception e) {
+        return ApiResponse.error("Bu işlem için yetkiniz bulunmamaktadır.", 403);
     }
 
     // İş kuralları hatası (Validasyon, mantık hatası vb.)
