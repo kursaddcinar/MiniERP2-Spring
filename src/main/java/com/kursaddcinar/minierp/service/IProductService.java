@@ -25,6 +25,7 @@ public interface IProductService {
     ApiResponse<DtoProductCategory> getCategoryById(Integer id);
     ApiResponse<DtoProductCategory> createCategory(DtoCreateProductCategory createDto);
     ApiResponse<DtoProductCategory> updateCategory(Integer id, DtoUpdateProductCategory updateDto);
+    List<DtoProductCategory> getActiveProductCategories();
     ApiResponse<Boolean> deleteCategory(Integer id);
 
     // --- Unit Operations ---
@@ -32,5 +33,7 @@ public interface IProductService {
     ApiResponse<DtoUnit> getUnitById(Integer id);
     ApiResponse<DtoUnit> createUnit(DtoCreateUnit createDto);
     ApiResponse<DtoUnit> updateUnit(Integer id, DtoUpdateUnit updateDto);
-    ApiResponse<Boolean> deleteUnit(Integer id);
+    ApiResponse<Boolean> deleteUnit(Integer id);List<DtoUnit> getActiveUnits();
+    ApiResponse<Boolean> activateUnit(Integer id);
+    ApiResponse<Boolean> deactivateUnit(Integer id);
 }

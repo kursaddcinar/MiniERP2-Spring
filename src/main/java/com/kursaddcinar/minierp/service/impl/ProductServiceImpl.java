@@ -182,6 +182,16 @@ public class ProductServiceImpl implements IProductService {
     // ==========================================
 
     @Override
+    public List<DtoProductCategory> getActiveProductCategories() {
+        // Repository'den sadece aktif olanları çekiyoruz
+        return categoryRepository.findByIsActiveTrue()
+                .stream()
+                .map(this::mapToDtoCategory)
+                .collect(Collectors.toList());
+    }
+    
+    
+    @Override
     public ApiResponse<Page<DtoProductCategory>> getCategories(Pageable pageable) {
         Page<ProductCategory> categories = categoryRepository.findAll(pageable);
         return ApiResponse.success(categories.map(this::mapToDtoCategory));
@@ -287,6 +297,36 @@ public class ProductServiceImpl implements IProductService {
             throw new BusinessRuleException("Bu birime bağlı ürünler olduğu için silinemez.");
         }
         return ApiResponse.success(true, "Birim silindi.");
+    }
+    
+    @Override
+    public List<DtoUnit> getActiveUnits() {
+        return unitRepository.findByIsActiveTrue()
+                .stream()
+                .map(this::mapToDtoUnit)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    @Transactional
+    public ApiResponse<Boolean> activateUnit(Integer id) {
+        Unit unit = unitRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Birim bulunamadı: " + id));
+        
+        unit.setActive(true);
+        unitRepository.save(unit);
+        return ApiResponse.success(true, "Birim aktif edildi.");
+    }
+
+    @Override
+    @Transactional
+    public ApiResponse<Boolean> deactivateUnit(Integer id) {
+        Unit unit = unitRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Birim bulunamadı: " + id));
+        
+        unit.setActive(false);
+        unitRepository.save(unit);
+        return ApiResponse.success(true, "Birim pasife alındı.");
     }
 
     // ==========================================
