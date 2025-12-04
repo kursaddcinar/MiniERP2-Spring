@@ -125,7 +125,8 @@ public class UserServiceImpl implements IUserService {
     @Override
     public ApiResponse<List<DtoUser>> getUsersByRole(String roleName) {
         // Repository'den veriyi çek
-        List<User> userList = userRepository.findByRoles_Name(roleName);
+        //List<User> userList = userRepository.findByRoles_Name(roleName);
+    	List<User> userList = userRepository.findUsersByRoleName(roleName);
 
         // Eğer liste boşsa veya rol bulunamazsa yine de success dönebiliriz (boş liste ile),
         // ama kullanıcıya bilgi vermek istersen check koyabilirsin.
