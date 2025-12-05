@@ -12,14 +12,14 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-// import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/warehouses")
 @RequiredArgsConstructor
-// @PreAuthorize("isAuthenticated()")
+@PreAuthorize("isAuthenticated()")
 public class WarehouseController {
 
     private final IStockService stockService;
@@ -41,13 +41,13 @@ public class WarehouseController {
     }
 
     @PostMapping
-    // @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
     public ResponseEntity<ApiResponse<DtoWarehouse>> createWarehouse(@Valid @RequestBody DtoCreateWarehouse createDto) {
         return ResponseEntity.ok(stockService.createWarehouse(createDto));
     }
 
     @PutMapping("/{id}")
-    // @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
     public ResponseEntity<ApiResponse<DtoWarehouse>> updateWarehouse(
             @PathVariable Integer id,
             @Valid @RequestBody DtoUpdateWarehouse updateDto) {
@@ -55,7 +55,7 @@ public class WarehouseController {
     }
 
     @DeleteMapping("/{id}")
-    // @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ApiResponse<Boolean>> deleteWarehouse(@PathVariable Integer id) {
         return ResponseEntity.ok(stockService.deleteWarehouse(id));
     }

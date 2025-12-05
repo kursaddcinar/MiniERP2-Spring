@@ -11,7 +11,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-// import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -19,7 +19,7 @@ import java.time.LocalDateTime;
 @RestController
 @RequestMapping("/api/sales-invoices")
 @RequiredArgsConstructor
-// @PreAuthorize("isAuthenticated()")
+@PreAuthorize("isAuthenticated()")
 public class SalesInvoiceController {
 
     private final ISalesInvoiceService salesInvoiceService;
@@ -27,7 +27,7 @@ public class SalesInvoiceController {
     // --- Listeleme ve Detay ---
 
     @GetMapping
-    // @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'SALES', 'FINANCE')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'SALES', 'FINANCE')")
     public ResponseEntity<ApiResponse<Page<DtoSalesInvoice>>> getInvoices(
             @PageableDefault(size = 10) Pageable pageable,
             @RequestParam(required = false) String status,
@@ -39,7 +39,7 @@ public class SalesInvoiceController {
     }
 
     @GetMapping("/{id}")
-    // @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'SALES', 'FINANCE')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'SALES', 'FINANCE')")
     public ResponseEntity<ApiResponse<DtoSalesInvoice>> getInvoice(@PathVariable Integer id) {
         return ResponseEntity.ok(salesInvoiceService.getInvoiceById(id));
     }
@@ -52,13 +52,13 @@ public class SalesInvoiceController {
     // --- CRUD İşlemleri ---
 
     @PostMapping
-    // @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'SALES')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'SALES')")
     public ResponseEntity<ApiResponse<DtoSalesInvoice>> createInvoice(@Valid @RequestBody DtoCreateSalesInvoice createDto) {
         return ResponseEntity.ok(salesInvoiceService.createInvoice(createDto));
     }
 
     @PutMapping("/{id}")
-    // @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'SALES')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'SALES')")
     public ResponseEntity<ApiResponse<DtoSalesInvoice>> updateInvoice(
             @PathVariable Integer id,
             @Valid @RequestBody DtoUpdateSalesInvoice updateDto) {
@@ -66,7 +66,7 @@ public class SalesInvoiceController {
     }
 
     @DeleteMapping("/{id}")
-    // @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'SALES')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'SALES')")
     public ResponseEntity<ApiResponse<Boolean>> deleteInvoice(@PathVariable Integer id) {
         return ResponseEntity.ok(salesInvoiceService.deleteInvoice(id));
     }
@@ -74,7 +74,7 @@ public class SalesInvoiceController {
     // --- Onay / İptal ---
 
     @PostMapping("/{id}/approve")
-    // @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'SALES')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'SALES')")
     public ResponseEntity<ApiResponse<Boolean>> approveInvoice(
             @PathVariable Integer id,
             @Valid @RequestBody DtoInvoiceApproval approvalDto) {
@@ -82,7 +82,7 @@ public class SalesInvoiceController {
     }
 
     @PostMapping("/{id}/cancel")
-    // @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
     public ResponseEntity<ApiResponse<Boolean>> cancelInvoice(
             @PathVariable Integer id,
             @Valid @RequestBody DtoInvoiceCancellation cancelDto) {
