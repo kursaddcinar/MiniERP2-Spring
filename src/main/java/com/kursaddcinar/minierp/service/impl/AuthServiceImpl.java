@@ -25,6 +25,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -171,15 +172,29 @@ public class AuthServiceImpl implements IAuthService {
     @Override
     @Transactional
     public ApiResponse<Object> initializeTestUsers() {
-        // 1. Rolleri Garantiye Al
-        Role adminRole = roleRepository.findByRoleName("ROLE_ADMIN").orElseGet(() -> {
-            Role r = new Role(); r.setRoleName("ROLE_ADMIN"); return roleRepository.save(r);
-        });
+        // Sistemde olması gereken tüm rollerin listesi
+        String[] roles = {
+            "ROLE_ADMIN", 
+            "ROLE_MANAGER", 
+            "ROLE_PURCHASE", 
+            "ROLE_FINANCE", 
+            "ROLE_SALES", 
+            "ROLE_WAREHOUSE",
+            "ROLE_USER" // Standart kullanıcı rolünü de ekleyelim
+        };
 
-        Role userRole = roleRepository.findByRoleName("ROLE_USER").orElseGet(() -> {
-            Role r = new Role(); r.setRoleName("ROLE_USER"); return roleRepository.save(r);
-        });
+        // 1. Rolleri veritabanında oluştur veya bul
+        List<Role> allRoles = new ArrayList<>();
+        for (String roleName : roles) {
+            Role role = roleRepository.findByRoleName(roleName).orElseGet(() -> {
+                Role newRole = new Role();
+                newRole.setRoleName(roleName);
+                return roleRepository.save(newRole);
+            });
+            allRoles.add(role);
+        }
         
+        // 2. Admin kullanıcısını oluştur ve TÜM rolleri ata
         if (!userRepository.existsByUsername("admin")) {
             User admin = new User();
             admin.setUsername("admin");
@@ -191,14 +206,17 @@ public class AuthServiceImpl implements IAuthService {
             
             User savedAdmin = userRepository.save(admin);
             
-            UserRole ur = new UserRole();
-            ur.setUser(savedAdmin);
-            ur.setRole(adminRole);
-            userRoleRepository.save(ur);
+            // Admin'e listedeki bütüm rolleri veriyoruz
+            for (Role role : allRoles) {
+                UserRole ur = new UserRole();
+                ur.setUser(savedAdmin);
+                ur.setRole(role);
+                userRoleRepository.save(ur);
+            }
             
-            log.info("Admin kullanıcısı oluşturuldu: admin / admin123");
+            log.info("Admin kullanıcısı oluşturuldu ve tüm yetkiler atandı: admin / admin123");
         }
         
-        return ApiResponse.success(true, "Test verileri yüklendi.");
+        return ApiResponse.success(true, "Tüm roller ve test verileri yüklendi.");
     }
 }

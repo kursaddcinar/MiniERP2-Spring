@@ -12,14 +12,14 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-// import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/product-categories")
 @RequiredArgsConstructor
-// @PreAuthorize("isAuthenticated()")
+@PreAuthorize("isAuthenticated()")
 public class ProductCategoryController {
 
     private final IProductService productService;
@@ -31,7 +31,7 @@ public class ProductCategoryController {
     }
 
     @GetMapping("/active")
-	 // @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'SALES', 'PURCHASE', 'FINANCE')") 
+	 @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'SALES', 'PURCHASE', 'FINANCE')") 
 	 public ResponseEntity<ApiResponse<List<DtoProductCategory>>> getActiveProductCategories() {
 	     // Artık Service katmanındaki özel metodu çağırıyoruz
 	     List<DtoProductCategory> activeCategories = productService.getActiveProductCategories();
@@ -44,13 +44,13 @@ public class ProductCategoryController {
     }
 
     @PostMapping
-    // @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
     public ResponseEntity<ApiResponse<DtoProductCategory>> createProductCategory(@Valid @RequestBody DtoCreateProductCategory createDto) {
         return ResponseEntity.ok(productService.createCategory(createDto));
     }
 
     @PutMapping("/{id}")
-    // @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
     public ResponseEntity<ApiResponse<DtoProductCategory>> updateProductCategory(
             @PathVariable Integer id,
             @Valid @RequestBody DtoUpdateProductCategory updateDto) {
@@ -58,13 +58,13 @@ public class ProductCategoryController {
     }
 
     @DeleteMapping("/{id}")
-    // @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ApiResponse<Boolean>> deleteProductCategory(@PathVariable Integer id) {
         return ResponseEntity.ok(productService.deleteCategory(id));
     }
 
     @PostMapping("/{id}/activate")
-    // @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
     public ResponseEntity<ApiResponse<Boolean>> activateProductCategory(@PathVariable Integer id) {
         // Not: IProductService'e activateCategory(id) metodunu eklemen gerekebilir.
         // Veya Update metodunu kullanabiliriz:
@@ -79,7 +79,7 @@ public class ProductCategoryController {
     }
 
     @PostMapping("/{id}/deactivate")
-    // @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
     public ResponseEntity<ApiResponse<Boolean>> deactivateProductCategory(@PathVariable Integer id) {
         DtoProductCategory category = productService.getCategoryById(id).getData();
         DtoUpdateProductCategory updateDto = new DtoUpdateProductCategory();
