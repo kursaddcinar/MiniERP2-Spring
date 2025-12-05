@@ -1,12 +1,9 @@
-package com.kursaddcinar.minierp.jwt;
+package com.kursaddcinar.minierp.jwt.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
-
-import com.kursaddcinar.minierp.jwt.entity.Role;
-import com.kursaddcinar.minierp.jwt.entity.User;
 
 import java.time.LocalDateTime;
 

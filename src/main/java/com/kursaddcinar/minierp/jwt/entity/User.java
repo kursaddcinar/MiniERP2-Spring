@@ -13,7 +13,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import com.kursaddcinar.minierp.entity.BaseEntity;
-import com.kursaddcinar.minierp.jwt.UserRole;
 
 @Entity
 @Table(name = "users")

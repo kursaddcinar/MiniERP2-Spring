@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.kursaddcinar.minierp.entity.BaseEntity;
-import com.kursaddcinar.minierp.jwt.UserRole;
 
 @Entity
 @Table(name = "roles")
